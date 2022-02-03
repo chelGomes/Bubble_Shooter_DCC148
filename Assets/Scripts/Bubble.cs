@@ -11,7 +11,7 @@ public class Bolha : MonoBehaviour{
 
     public CorBolha corBolha;
 
-    private void OnCollisionEnter2D(Collision2D colisao){
+    private void OnCollisionEnter2D(Colisao2D colisao){
         if (colisao.gameObject.tag == "Bolha" && colisao.gameObject.GetComponent<Bubble>().ehFixo){
             if (!ehFixo){
                 Colidiu();

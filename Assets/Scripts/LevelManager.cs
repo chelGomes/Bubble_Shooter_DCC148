@@ -86,7 +86,7 @@ public class LevelManager : MonoBehaviour{
         foreach (Transform t in bubblesArea){
             Bolha bubbleScript = t.GetComponent<Bolha>();
             if (cores.Count < bubblesPrefabs.Count && !cores.Contains(bubbleScript.corBolha.ToString())){
-                string cor = bubbleScript..ToString()corBolha;
+                string cor = bubbleScript..ToString().corBolha;
                 cores.Add(cor);
 
                 foreach (GameObject prefab in bubblesPrefabs){
