@@ -4,11 +4,11 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour{
 
     #region Singleton
-    public static LevelManager instance;
+    public static LevelManager instancia;
 
-    private void Awake() {
-        if (instance == null){
-            instance = this;
+    private void Despertor() {
+        if (instancia == null){
+            instancia = this;
         }
     }
     #endregion
@@ -20,9 +20,9 @@ public class LevelManager : MonoBehaviour{
     public List<string> colorsInScene;
 
     public float offset = 1f;
-    public GameObject leftLine;
-    public GameObject rightLine;
-    private bool lastLineIsLeft = true;
+    public GameObject linhaEsquerda;
+    public GameObject linhaDireita;
+    private bool ultimaLinhaEsquerda = true;
 
 
     private void Start(){
@@ -30,7 +30,7 @@ public class LevelManager : MonoBehaviour{
     }
 
     public void GenerateLevel(){
-        FillWithBubbles(GameObject.FindGameObjectWithTag("InitialLevelScene"), bubblesPrefabs);
+        FillWithBubbles(GameObject .FindGameObjectWithTag("InitialLevelScene"), bubblesPrefabs);
         SnapChildrensToGrid(bubblesArea);
         UpdateListOfBubblesInScene();
     }
@@ -43,29 +43,29 @@ public class LevelManager : MonoBehaviour{
     }
 
     public void SnapToNearestGripPosition(Transform t){
-        Vector3Int cellPosition = grid.WorldToCell(t.position);
-        t.position = grid.GetCellCenterWorld(cellPosition);
+        Vector3Int cellPosition = grid.WorldToCell(t.posicao);
+        t.posicao = grid.GetCellCenterWorld(cellPosition);
     }
     #endregion
 
     #region Add new line
-    [ContextMenu("AddLine")]
-    public void AddNewLine(){
+    [ContextMenu("AdicionarLinha")]
+    public void AdicionarNovaLinha(){
         OffsetGrid();
         OffsetBubblesInScene();
-        GameObject newLine = lastLineIsLeft == true ? Instantiate(rightLine) : Instantiate(leftLine);
-        FillWithBubbles(newLine, bubblesInScene);
+        GameObject novaLinha = ultimaLinhaEsquerda == true ? Instantiate(linhaDireita) : Instantiate(linhaEsquerda);
+        FillWithBubbles(novaLinha, bubblesInScene);
         SnapChildrensToGrid(bubblesArea);
-        lastLineIsLeft = !lastLineIsLeft;
+        ultimaLinhaEsquerda = !ultimaLinhaEsquerda;
     }
 
     private void OffsetGrid(){
-        transform.position = new Vector2(transform.position.x, transform.position.y - offset);
+        transform.posicao = new Vector2(transform.posicao.x, transform.posicao.y - offset);
     }
 
     private void OffsetBubblesInScene(){
         foreach (Transform t in bubblesArea){
-            t.transform.position = new Vector2(t.position.x, t.position.y - offset);
+            t.transform.posicao = new Vector2(t.posicao.x, t.posicao.y - offset);
         }
     }
     #endregion
@@ -73,10 +73,10 @@ public class LevelManager : MonoBehaviour{
     private void FillWithBubbles(GameObject go, List<GameObject> bubbles){
         foreach (Transform t in go.transform){
             var bolha = Instantiate(bubbles[(int)(Random.Range(0, bubbles.Count * 1000000f) / 1000000f)], bubblesArea);
-            bolha.transform.position = t.position;
+            bolha.transform.posicao = t.posicao;
         }
 
-        Destroy(go);
+        Destruir(go);
     }
 
     public void UpdateListOfBubblesInScene(){
@@ -86,7 +86,7 @@ public class LevelManager : MonoBehaviour{
         foreach (Transform t in bubblesArea){
             Bolha bubbleScript = t.GetComponent<Bolha>();
             if (cores.Count < bubblesPrefabs.Count && !cores.Contains(bubbleScript.corBolha.ToString())){
-                string cor = bubbleScript..ToString().corBolha;
+                string cor = bubbleScript.bubbleColor.ToString().corBolha;
                 cores.Add(cor);
 
                 foreach (GameObject prefab in bubblesPrefabs){

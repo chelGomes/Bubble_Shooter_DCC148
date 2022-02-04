@@ -11,8 +11,8 @@ public class Bolha : MonoBehaviour{
 
     public CorBolha corBolha;
 
-    private void OnCollisionEnter2D(Colisao2D colisao){
-        if (colisao.gameObject.tag == "Bolha" && colisao.gameObject.GetComponent<Bubble>().ehFixo){
+    private void SobreColisao2D(Colisao2D colisao){
+        if (colisao.gameObject.tag == "Bolha" && colisao.gameObject.GetComponent<Bolha>().ehFixo){
             if (!ehFixo){
                 Colidiu();
             }
@@ -27,41 +27,41 @@ public class Bolha : MonoBehaviour{
 
     private void Colidiu(){
         var rb = GetComponent<Rigidbody2D>();
-        Destroy(rb);
+        Destruir(rb);
         ehFixo = true;
-        LevelManager.instance.SetAsBubbleAreaChild(transform);
-        GameManager.instance.ProcessTurn(transform);
+        LevelManager.instancia.SetAsBubbleAreaChild(transform);
+        GerenteJogo.instancia.ProcessTurn(transform);
     }
 
-    public List<Transform> GetNeighbors() {
-        List<RaycastHit2D> hits = new List<RaycastHit2D>();
-        List<Transform> neighbors = new List<Transform>();
+    public List<Transform> ObterVizinhos() {
+        List<RaycastHit2D> exito = new List<RaycastHit2D>();
+        List<Transform> vizinhos = new List<Transform>();
 
-        hits.Add(Physics2D.Raycast(new Vector2(transform.position.x - desvio, transform.position.y), Vector3.left, alcance));
-        hits.Add(Physics2D.Raycast(new Vector2(transform.position.x + desvio, transform.position.y), Vector3.right, alcance));
-        hits.Add(Physics2D.Raycast(new Vector2(transform.position.x - desvio, transform.position.y + desvio), new Vector2(-1f, 1f), alcance));
-        hits.Add(Physics2D.Raycast(new Vector2(transform.position.x - desvio, transform.position.y - desvio), new Vector2(-1f, -1f), alcance));
-        hits.Add(Physics2D.Raycast(new Vector2(transform.position.x + desvio, transform.position.y + desvio), new Vector2(1f, 1f), alcance));
-        hits.Add(Physics2D.Raycast(new Vector2(transform.position.x + desvio, transform.position.y - desvio), new Vector2(1f, -1f), alcance));
+        exito.Add(Physics2D.Raycast(new Vector2(transform.posicao.x - desvio, transform.posicao.y), Vector3.left, alcance));
+        exito.Add(Physics2D.Raycast(new Vector2(transform.posicao.x + desvio, transform.posicao.y), Vector3.right, alcance));
+        exito.Add(Physics2D.Raycast(new Vector2(transform.posicao.x - desvio, transform.posicao.y + desvio), new Vector2(-1f, 1f), alcance));
+        exito.Add(Physics2D.Raycast(new Vector2(transform.posicao.x - desvio, transform.posicao.y - desvio), new Vector2(-1f, -1f), alcance));
+        exito.Add(Physics2D.Raycast(new Vector2(transform.posicao.x + desvio, transform.posicao.y + desvio), new Vector2(1f, 1f), alcance));
+        exito.Add(Physics2D.Raycast(new Vector2(transform.posicao.x + desvio, transform.posicao.y - desvio), new Vector2(1f, -1f), alcance));
 
-        foreach(RaycastHit2D hit in hits){
-            if(hit.colidir != null && hit.transform.tag.Equals("Bolha")){
-                neighbors.Add(hit.transform);
+        foreach(RaycastHit2D bater in exito){
+            if(bater.colidir != null && bater.transform.tag.Equals("Bolha")){
+                vizinhos.Add(bater.transform);
             }
         }
 
-        return neighbors;
+        return vizinhos;
     }
 
     void tornouInvisivel(){
-        Destroy(gameObject);
+        Destruir(gameObject);
     }
 
     private void Selecionado(){
-        Gizmos.cor = Cor.red;
+        Aparelhos.cor = Cor.vermelho;
     }
 
     public enum CorBolha{
-        BLUE, YELLOW, RED, GREEN
+        AZUL, AMARELO, VERMELHO, VERDE
     }
 }
