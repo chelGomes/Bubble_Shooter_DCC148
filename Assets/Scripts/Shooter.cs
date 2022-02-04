@@ -1,84 +1,84 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Shooter : MonoBehaviour{
-    public Transform gunSprite;
-    public bool canShoot;
+public class Atirador : MonoBehaviour{
+    public Transform arma;
+    public bool possoAtirar;
     public float rapidez = 6f;
 
-    public Transform nextBubblePosition;
-    public GameObject currentBubble;
-    public GameObject nextBubble;
+    public Transform proximaPosicaoBolha;
+    public GameObject atualBolha;
+    public GameObject proximaBolha;
 
-    private Vector2 lookDirection;
-    private float lookAngle;
-    public bool isSwaping = false;
-    public float time = 0.02f;
+    private Vector2 olhaDirecao;
+    private float visaoAngulo;
+    public bool ehTrocado = false;
+    public float tempo = 0.02f;
 
     public void Update(){
-        lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        lookAngle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
-        gunSprite.rotation = Quaternion.Euler(0f, 0f, lookAngle - 90f);
+        olhaDirecao = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.posicao;
+        visaoAngulo = Mathf.Atan2(olhaDirecao.y, olhaDirecao.x) * Mathf.Rad2Deg;
+        arma.rotacao = Quaternion.Euler(0f, 0f, visaoAngulo - 90f);
 
-        if(isSwaping){
-            if(Vector2.Distance(currentBubble.transform.posicao, nextBubblePosition.posicao) <= 0.2f
-                && Vector2.Distance(nextBubble.transform.posicao, transform.posicao) <= 0.2f){
-                nextBubble.transform.posicao = transform.posicao;
-                currentBubble.transform.posicao = nextBubblePosition.posicao;
+        if(ehTrocado){
+            if(Vector2.Distance(atualBolha.transform.posicao, proximaPosicaoBolha.posicao) <= 0.2f
+                && Vector2.Distance(proximaBolha.transform.posicao, transform.posicao) <= 0.2f){
+                proximaBolha.transform.posicao = transform.posicao;
+                atualBolha.transform.posicao = proximaPosicaoBolha.posicao;
 
-                currentBubble.GetComponent<Colisao2D>().enabled = true;
-                nextBubble.GetComponent<Colisao2D>().enabled = true;
+                atualBolha.GetComponent<Colisao2D>().enabled = true;
+                proximaBolha.GetComponent<Colisao2D>().enabled = true;
 
-                isSwaping = false;
+                ehTrocado = false;
 
-                GameObject reference = currentBubble;
-                currentBubble = nextBubble;
-                nextBubble = reference;
+                GameObject referencia = atualBolha;
+                atualBolha = proximaBolha;
+                proximaBolha = referencia;
             }
 
-            nextBubble.transform.posicao = Vector2.Lerp(nextBubble.transform.posicao, transform.posicao, time);
-            currentBubble.transform.posicao = Vector2.Lerp(currentBubble.transform.posicao, nextBubblePosition.posicao, time);
+            proximaBolha.transform.posicao = Vector2.Lerp(proximaBolha.transform.posicao, transform.posicao, tempo);
+            atualBolha.transform.posicao = Vector2.Lerp(atualBolha.transform.posicao, proximaPosicaoBolha.posicao, tempo);
         }
     }
 
-    public void Shoot(){
-        transform.rotation = Quaternion.Euler(0f, 0f, lookAngle - 90f);
-        currentBubble.transform.rotation = transform.rotation;
-        currentBubble.GetComponent<Rigidbody2D>().AddForce(currentBubble.transform.up * rapidez, ForceMode2D.Impulse);
-        currentBubble = null;
+    public void Atirar(){
+        transform.rotacao = Quaternion.Euler(0f, 0f, visaoAngulo - 90f);
+        atualBolha.transform.rotacao = transform.rotacao;
+        atualBolha.GetComponent<Rigidbody2D>().AddForce(atualBolha.transform.up * rapidez, ForceMode2D.Impulse);
+        atualBolha = null;
     }
 
-    [ContextMenu("SwapBubbles")]
-    public void SwapBubbles(){
-        currentBubble.GetComponent<Colisao2D>().enabled = false;
-        nextBubble.GetComponent<Colisao2D>().enabled = false;
-        isSwaping = true;
+    [ContextMenu("Troca Bolhas")]
+    public void TrocaBolhas(){
+        atualBolha.GetComponent<Colisao2D>().enabled = false;
+        proximaBolha.GetComponent<Colisao2D>().enabled = false;
+        ehTrocado = true;
     }
 
-    [ContextMenu("CreateNextBubble")]
-    public void CreateNextBubble(){
-        List<GameObject> bubblesInScene = LevelManager.instancia.bubblesInScene;
+    [ContextMenu("Criar Proxima Bolha")]  //cenaBolhas
+    public void CriarProximaBolha(){
+        List<GameObject> cenaBolhas = LevelManager.instancia.cenaBolhas;
         List<string> cores = LevelManager.instancia.colorsInScene;
 
-        if (nextBubble == null){
-            nextBubble = InstantiateNewBubble(bubblesInScene);
+        if (proximaBolha == null){
+            proximaBolha = InstantiateNewBubble(cenaBolhas);
         }else{
-            if(!cores.Contains(nextBubble.GetComponent<Bolha>().corBolha.ToString())){
-                Destruir(nextBubble);
-                nextBubble = InstantiateNewBubble(bubblesInScene);
+            if(!cores.Contains(proximaBolha.GetComponent<Bolha>().corBolha.ToString())){
+                Destruir(proximaBolha);
+                proximaBolha = InstantiateNewBubble(cenaBolhas);
             }
         }
 
-        if(currentBubble == null){
-            currentBubble = nextBubble;
-            currentBubble.transform.posicao = new Vector2(transform.posicao.x, transform.posicao.y);
-            nextBubble = InstantiateNewBubble(bubblesInScene);
+        if(atualBolha == null){
+            atualBolha = proximaBolha;
+            atualBolha.transform.posicao = new Vector2(transform.posicao.x, transform.posicao.y);
+            proximaBolha = InstantiateNewBubble(cenaBolhas);
         }
     }
 
-    private GameObject InstantiateNewBubble(List<GameObject> bubblesInScene){
-        gameObject novaBolha = Instantiate(bubblesInScene[(int)(Random.Range(0, bubblesInScene.Count * 1000000f) / 1000000f)]);
-        novaBolha.transform.posicao = new Vector2(nextBubblePosition.posicao.x, nextBubblePosition.posicao.y);
+    private GameObject InstantiateNewBubble(List<GameObject> cenaBolhas){
+        gameObject novaBolha = Instantiate(cenaBolhas[(int)(Random.Range(0, cenaBolhas.Count * 1000000f) / 1000000f)]);
+        novaBolha.transform.posicao = new Vector2(proximaPosicaoBolha.posicao.x, proximaPosicaoBolha.posicao.y);
         novaBolha.GetComponent<Bolha>().ehFixo = false;
         Rigidbody2D rb2d = novaBolha.AddComponent(typeof(Rigidbody2D)) as Rigidbody2D;
         rb2d.gravityScale = 0f;

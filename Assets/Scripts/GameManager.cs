@@ -12,7 +12,7 @@ public class GerenteJogo : MonoBehaviour{
     }
     #endregion
 
-    public Shooter shootScript;
+    public Atirador shootScript;
     public Transform ultimaLinhaPonteiro;
 
     private int sequenceSize = 3;
