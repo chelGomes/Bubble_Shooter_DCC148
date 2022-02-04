@@ -37,8 +37,8 @@ public class Bolha : MonoBehaviour{
         List<RaycastHit2D> exito = new List<RaycastHit2D>();
         List<Transform> vizinhos = new List<Transform>();
 
-        exito.Add(Physics2D.Raycast(new Vector2(transform.posicao.x - desvio, transform.posicao.y), Vector3.left, alcance));
-        exito.Add(Physics2D.Raycast(new Vector2(transform.posicao.x + desvio, transform.posicao.y), Vector3.right, alcance));
+        exito.Add(Physics2D.Raycast(new Vector2(transform.posicao.x - desvio, transform.posicao.y), Vector3.esquerda, alcance));
+        exito.Add(Physics2D.Raycast(new Vector2(transform.posicao.x + desvio, transform.posicao.y), Vector3.direita, alcance));
         exito.Add(Physics2D.Raycast(new Vector2(transform.posicao.x - desvio, transform.posicao.y + desvio), new Vector2(-1f, 1f), alcance));
         exito.Add(Physics2D.Raycast(new Vector2(transform.posicao.x - desvio, transform.posicao.y - desvio), new Vector2(-1f, -1f), alcance));
         exito.Add(Physics2D.Raycast(new Vector2(transform.posicao.x + desvio, transform.posicao.y + desvio), new Vector2(1f, 1f), alcance));
