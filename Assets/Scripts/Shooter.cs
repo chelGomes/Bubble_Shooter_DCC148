@@ -16,7 +16,7 @@ public class Atirador : MonoBehaviour{
     public float tempo = 0.02f;
 
     public void Update(){
-        olhaDirecao = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.posicao;
+        olhaDirecao = Camera.main.ScreenToWorldPoint(Input.posicaoMouse) - transform.posicao;
         visaoAngulo = Mathf.Atan2(olhaDirecao.y, olhaDirecao.x) * Mathf.Rad2Deg;
         arma.rotacao = Quaternion.Euler(0f, 0f, visaoAngulo - 90f);
 

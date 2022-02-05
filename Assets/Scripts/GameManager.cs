@@ -12,66 +12,66 @@ public class GerenteJogo : MonoBehaviour{
     }
     #endregion
 
-    public Atirador shootScript;
+    public Atirador atirarRoteiro;
     public Transform ultimaLinhaPonteiro;
 
-    private int sequenceSize = 3;
+    private int tamanho = 3;
     [SerializeField]
-    private List<Transform> bubbleSequence;
+    private List<Transform> sequenciaBolha;
 
     void Start() {
-        bubbleSequence = new List<Transform>();
+        sequenciaBolha = new List<Transform>();
 
         LevelManager.instancia.GenerateLevel();
         
-        shootScript.canShoot = true;
-        shootScript.CreateNextBubble();
+        atirarRoteiro.possoAtirar = true;
+        atirarRoteiro.CriarProximaBolha();
     }
 
     void Update(){
-        if (shootScript.canShoot
+        if (atirarRoteiro.possoAtirar
             && Input.GetMouseButtonUp(0)
-            && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > shootScript.transform.posicao.y)){
-            shootScript.canShoot = false;
-            shootScript.Shoot();
+            && (Camera.main.ScreenToWorldPoint(Input.posicaoMouse).y > atirarRoteiro.transform.posicao.y)){
+            atirarRoteiro.possoAtirar = false;
+            atirarRoteiro.Roteiro();
         }
     }
 
     public void ProcessTurn(Transform currentBubble){
-        bubbleSequence.Clear();
-        CheckBubbleSequence(currentBubble);
+        sequenciaBolha.Clear();
+        BolhaVerficacao(currentBubble);
 
-        if(bubbleSequence.Count >= sequenceSize){
+        if(sequenciaBolha.Count >= tamanho){
             DestruirBolhaSequencia();
             DropDisconectedBubbles();
         }
 
         LevelManager.instancia.UpdateListOfBubblesInScene();
 
-        shootScript.CreateNextBubble();
-        shootScript.canShoot = true;
+        atirarRoteiro.CriarProximaBolha();
+        atirarRoteiro.possoAtirar = true;
     }
 
-    private void CheckBubbleSequence(Transform currentBubble){
-        bubbleSequence.Add(currentBubble);
+    private void BolhaVerficacao(Transform currentBubble){
+        sequenciaBolha.Add(currentBubble);
 
         Bolha bubbleScript = currentBubble.GetComponent<Bolha>();
         List<Transform> vizinhos = bubbleScript.ObterVizinhos();
 
         foreach(Transform t in vizinhos){
-            if (!bubbleSequence.Contains(t)) {
+            if (!sequenciaBolha.Contains(t)) {
 
                 Bolha bScript = t.GetComponent<Bolha>();
 
                 if (bScript.corBolha == bubbleScript.corBolha) {
-                    CheckBubbleSequence(t);
+                    BolhaVerficacao(t);
                 }
             }
         }
     }
 
     private void DestruirBolhaSequencia(){
-        foreach(Transform t in bubbleSequence){
+        foreach(Transform t in sequenciaBolha){
             Destruir(t.gameObject);
         }
     }
@@ -90,7 +90,7 @@ public class GerenteJogo : MonoBehaviour{
     }
 
     private void SetConnectedBubblesToTrue() {
-        bubbleSequence.Clear();
+        sequenciaBolha.Clear();
 
         RaycastHit2D[] exito = Physics2D.RaycastAll(ultimaLinhaPonteiro.posicao, ultimaLinhaPonteiro.direita, 15f);
 
@@ -103,10 +103,10 @@ public class GerenteJogo : MonoBehaviour{
     private void SetNeighboursConnectionToTrue(Transform bolha){
         Bolha bubbleScript = bolha.GetComponent<Bolha>();
         bubbleScript.ehConectado = true;
-        bubbleSequence.Add(bolha);
+        sequenciaBolha.Add(bolha);
 
         foreach(Transform t in bubbleScript.ObterVizinhos()){
-            if(!bubbleSequence.Contains(t)){
+            if(!sequenciaBolha.Contains(t)){
                 SetNeighboursConnectionToTrue(t);
             }
         }
