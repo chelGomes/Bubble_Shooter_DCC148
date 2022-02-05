@@ -55,15 +55,15 @@ public class GerenteJogo : MonoBehaviour{
     private void BolhaVerficacao(Transform currentBubble){
         sequenciaBolha.Add(currentBubble);
 
-        Bolha bubbleScript = currentBubble.GetComponent<Bolha>();
-        List<Transform> vizinhos = bubbleScript.ObterVizinhos();
+        Bolha roteiroBolha = currentBubble.GetComponent<Bolha>();
+        List<Transform> vizinhos = roteiroBolha.ObterVizinhos();
 
         foreach(Transform t in vizinhos){
             if (!sequenciaBolha.Contains(t)) {
 
                 Bolha bScript = t.GetComponent<Bolha>();
 
-                if (bScript.corBolha == bubbleScript.corBolha) {
+                if (bScript.corBolha == roteiroBolha.corBolha) {
                     BolhaVerficacao(t);
                 }
             }
@@ -84,7 +84,7 @@ public class GerenteJogo : MonoBehaviour{
 
     #region Drop Disconected Bubbles
     private void SetAllBubblesConnectionToFalse(){
-        foreach (Transform bolha in LevelManager.instancia.bubblesArea){
+        foreach (Transform bolha in LevelManager.instancia.areaBolhas){
             bolha.GetComponent<Bolha>().ehConectado = false;
         }
     }
@@ -101,11 +101,11 @@ public class GerenteJogo : MonoBehaviour{
     }
 
     private void SetNeighboursConnectionToTrue(Transform bolha){
-        Bolha bubbleScript = bolha.GetComponent<Bolha>();
-        bubbleScript.ehConectado = true;
+        Bolha roteiroBolha = bolha.GetComponent<Bolha>();
+        roteiroBolha.ehConectado = true;
         sequenciaBolha.Add(bolha);
 
-        foreach(Transform t in bubbleScript.ObterVizinhos()){
+        foreach(Transform t in roteiroBolha.ObterVizinhos()){
             if(!sequenciaBolha.Contains(t)){
                 SetNeighboursConnectionToTrue(t);
             }
@@ -113,7 +113,7 @@ public class GerenteJogo : MonoBehaviour{
     }
 
     private void SetGravityToDisconectedBubbles(){
-        foreach (Transform bolha in LevelManager.instancia.bubblesArea){
+        foreach (Transform bolha in LevelManager.instancia.areaBolhas){
             if (!bolha.GetComponent<Bolha>().ehConectado){
                 bolha.gameObject.GetComponent<CircleCollider2D>().enabled = false;
                 if(!bolha.GetComponent<Rigidbody2D>()){

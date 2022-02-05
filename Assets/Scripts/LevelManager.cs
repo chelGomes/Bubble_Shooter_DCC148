@@ -84,9 +84,9 @@ public class Nivel : MonoBehaviour{
         List<GameObject> newListOfBubbles = new List<GameObject>();
 
         foreach (Transform t in areaBolhas){
-            Bolha bubbleScript = t.GetComponent<Bolha>();
-            if (cores.Count < fabricarBolhas.Count && !cores.Contains(bubbleScript.corBolha.ToString())){
-                string cor = bubbleScript.bubbleColor.ToString().corBolha;
+            Bolha roteiroBolha = t.GetComponent<Bolha>();
+            if (cores.Count < fabricarBolhas.Count && !cores.Contains(roteiroBolha.corBolha.ToString())){
+                string cor = roteiroBolha.bubbleColor.ToString().corBolha;
                 cores.Add(cor);
 
                 foreach (GameObject prefab in fabricarBolhas){
