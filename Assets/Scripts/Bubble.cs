@@ -29,7 +29,7 @@ public class Bolha : MonoBehaviour{
         var rb = GetComponent<Rigidbody2D>();
         Destruir(rb);
         ehFixo = true;
-        LevelManager.instancia.SetAsBubbleAreaChild(transform);
+        LevelManager.instancia.DefinirAreaBolha(transform);
         GerenteJogo.instancia.Processo(transform);
     }
 

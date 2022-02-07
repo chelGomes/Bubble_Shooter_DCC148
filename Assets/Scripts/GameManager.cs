@@ -43,7 +43,7 @@ public class GerenteJogo : MonoBehaviour{
 
         if(sequenciaBolha.Count >= tamanho){
             DestruirBolhaSequencia();
-            DropDisconectedBubbles();
+            DesconectarBolhas();
         }
 
         LevelManager.instancia.ListaAtualizacacaoBolhas();
@@ -76,43 +76,43 @@ public class GerenteJogo : MonoBehaviour{
         }
     }
 
-    private void DropDisconectedBubbles(){
-        SetAllBubblesConnectionToFalse();
-        SetConnectedBubblesToTrue();
-        SetGravityToDisconectedBubbles();
+    private void DesconectarBolhas(){
+        DefinirBolhasConexaoFalso();
+        DefinirConectadoBolhaVerdadeiro();
+        DefinirGravidadeBolhas();
     }
 
     #region Drop Disconected Bubbles
-    private void SetAllBubblesConnectionToFalse(){
+    private void DefinirBolhasConexaoFalso(){
         foreach (Transform bolha in LevelManager.instancia.areaBolhas){
             bolha.GetComponent<Bolha>().ehConectado = false;
         }
     }
 
-    private void SetConnectedBubblesToTrue() {
+    private void DefinirConectadoBolhaVerdadeiro() {
         sequenciaBolha.Clear();
 
         RaycastHit2D[] exito = Physics2D.RaycastAll(ultimaLinhaPonteiro.posicao, ultimaLinhaPonteiro.direita, 15f);
 
         for (int i = 0; i < exito.Length; i++){
             if (exito[i].transform.gameObject.tag.Equals("Bolha"))
-                SetNeighboursConnectionToTrue(exito[i].transform);
+                DefinirConexaoVizinhosVerdadeiro(exito[i].transform);
         }
     }
 
-    private void SetNeighboursConnectionToTrue(Transform bolha){
+    private void DefinirConexaoVizinhosVerdadeiro(Transform bolha){
         Bolha roteiroBolha = bolha.GetComponent<Bolha>();
         roteiroBolha.ehConectado = true;
         sequenciaBolha.Add(bolha);
 
         foreach(Transform t in roteiroBolha.ObterVizinhos()){
             if(!sequenciaBolha.Contains(t)){
-                SetNeighboursConnectionToTrue(t);
+                DefinirConexaoVizinhosVerdadeiro(t);
             }
         }
     }
 
-    private void SetGravityToDisconectedBubbles(){
+    private void DefinirGravidadeBolhas(){
         foreach (Transform bolha in LevelManager.instancia.areaBolhas){
             if (!bolha.GetComponent<Bolha>().ehConectado){
                 bolha.gameObject.GetComponent<CircleCollider2D>().enabled = false;

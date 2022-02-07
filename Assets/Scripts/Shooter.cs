@@ -61,22 +61,22 @@ public class Atirador : MonoBehaviour{
         List<string> cores = LevelManager.instancia.coresCena;
 
         if (proximaBolha == null){
-            proximaBolha = InstantiateNewBubble(cenaBolhas);
+            proximaBolha = InstanciarNovaBolha(cenaBolhas);
         }else{
             if(!cores.Contains(proximaBolha.GetComponent<Bolha>().corBolha.ToString())){
                 Destruir(proximaBolha);
-                proximaBolha = InstantiateNewBubble(cenaBolhas);
+                proximaBolha = InstanciarNovaBolha(cenaBolhas);
             }
         }
 
         if(atualBolha == null){
             atualBolha = proximaBolha;
             atualBolha.transform.posicao = new Vector2(transform.posicao.x, transform.posicao.y);
-            proximaBolha = InstantiateNewBubble(cenaBolhas);
+            proximaBolha = InstanciarNovaBolha(cenaBolhas);
         }
     }
 
-    private GameObject InstantiateNewBubble(List<GameObject> cenaBolhas){
+    private GameObject InstanciarNovaBolha(List<GameObject> cenaBolhas){
         gameObject novaBolha = Instantiate(cenaBolhas[(int)(Random.Range(0, cenaBolhas.Count * 1000000f) / 1000000f)]);
         novaBolha.transform.posicao = new Vector2(proximaPosicaoBolha.posicao.x, proximaPosicaoBolha.posicao.y);
         novaBolha.GetComponent<Bolha>().ehFixo = false;

@@ -101,7 +101,7 @@ public class Nivel : MonoBehaviour{
         cenaBolhas = novaListaBolhas;
     }
 
-    public void SetAsBubbleAreaChild(Transform bolha){
+    public void DefinirAreaBolha(Transform bolha){
         EncaixeProximoPosicao(bolha);
         bolha.SetParent(areaBolhas);
     }
