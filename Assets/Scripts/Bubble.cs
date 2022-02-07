@@ -30,7 +30,7 @@ public class Bolha : MonoBehaviour{
         Destruir(rb);
         ehFixo = true;
         LevelManager.instancia.SetAsBubbleAreaChild(transform);
-        GerenteJogo.instancia.ProcessTurn(transform);
+        GerenteJogo.instancia.Processo(transform);
     }
 
     public List<Transform> ObterVizinhos() {

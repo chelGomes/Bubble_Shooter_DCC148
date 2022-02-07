@@ -58,7 +58,7 @@ public class Atirador : MonoBehaviour{
     [ContextMenu("Criar Proxima Bolha")]  //cenaBolhas
     public void CriarProximaBolha(){
         List<GameObject> cenaBolhas = LevelManager.instancia.cenaBolhas;
-        List<string> cores = LevelManager.instancia.colorsInScene;
+        List<string> cores = LevelManager.instancia.coresCena;
 
         if (proximaBolha == null){
             proximaBolha = InstantiateNewBubble(cenaBolhas);

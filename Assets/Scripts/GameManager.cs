@@ -22,7 +22,7 @@ public class GerenteJogo : MonoBehaviour{
     void Start() {
         sequenciaBolha = new List<Transform>();
 
-        LevelManager.instancia.GenerateLevel();
+        LevelManager.instancia.GerarNivel();
         
         atirarRoteiro.possoAtirar = true;
         atirarRoteiro.CriarProximaBolha();
@@ -37,7 +37,7 @@ public class GerenteJogo : MonoBehaviour{
         }
     }
 
-    public void ProcessTurn(Transform currentBubble){
+    public void Processo(Transform currentBubble){
         sequenciaBolha.Clear();
         BolhaVerficacao(currentBubble);
 
@@ -46,7 +46,7 @@ public class GerenteJogo : MonoBehaviour{
             DropDisconectedBubbles();
         }
 
-        LevelManager.instancia.UpdateListOfBubblesInScene();
+        LevelManager.instancia.ListaAtualizacacaoBolhas();
 
         atirarRoteiro.CriarProximaBolha();
         atirarRoteiro.possoAtirar = true;

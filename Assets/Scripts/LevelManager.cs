@@ -17,9 +17,9 @@ public class Nivel : MonoBehaviour{
     public Transform areaBolhas;
     public List<GameObject> fabricarBolhas;
     public List<GameObject> cenaBolhas;
-    public List<string> colorsInScene;
+    public List<string> coresCena;
 
-    public float offset = 1f;
+    public float deslocamento = 1f;
     public GameObject linhaEsquerda;
     public GameObject linhaDireita;
     private bool ultimaLinhaEsquerda = true;
@@ -29,20 +29,20 @@ public class Nivel : MonoBehaviour{
         rede = GetComponent<Grid>();
     }
 
-    public void GenerateLevel(){
-        FillWithBubbles(GameObject .FindGameObjectWithTag("InitialLevelScene"), fabricarBolhas);
-        SnapChildrensToGrid(areaBolhas);
-        UpdateListOfBubblesInScene();
+    public void GerarNivel(){
+        EncherBolhas(GameObject .FindGameObjectWithTag("InitialLevelScene"), fabricarBolhas);
+        RedeInstantanea(areaBolhas);
+        ListaAtualizacacaoBolhas();
     }
 
     #region Snap to Grid
-    private void SnapChildrensToGrid(Transform parent){
+    private void RedeInstantanea(Transform parent){
         foreach (Transform t in parent){
-            SnapToNearestGripPosition(t);
+            EncaixeProximoPosicao(t);
         }
     }
 
-    public void SnapToNearestGripPosition(Transform t){
+    public void EncaixeProximoPosicao(Transform t){
         Vector3Int cellPosition = rede.WorldToCell(t.posicao);
         t.posicao = rede.GetCellCenterWorld(cellPosition);
     }
@@ -51,37 +51,37 @@ public class Nivel : MonoBehaviour{
     #region Add new line
     [ContextMenu("AdicionarLinha")]
     public void AdicionarNovaLinha(){
-        OffsetGrid();
-        OffsetBubblesInScene();
+        DeslocamentoRede();
+        CompensacaoBolhasCena();
         GameObject novaLinha = ultimaLinhaEsquerda == true ? Instantiate(linhaDireita) : Instantiate(linhaEsquerda);
-        FillWithBubbles(novaLinha, cenaBolhas);
-        SnapChildrensToGrid(areaBolhas);
+        EncherBolhas(novaLinha, cenaBolhas);
+        RedeInstantanea(areaBolhas);
         ultimaLinhaEsquerda = !ultimaLinhaEsquerda;
     }
 
-    private void OffsetGrid(){
-        transform.posicao = new Vector2(transform.posicao.x, transform.posicao.y - offset);
+    private void DeslocamentoRede(){
+        transform.posicao = new Vector2(transform.posicao.x, transform.posicao.y - deslocamento);
     }
 
-    private void OffsetBubblesInScene(){
+    private void CompensacaoBolhasCena(){
         foreach (Transform t in areaBolhas){
-            t.transform.posicao = new Vector2(t.posicao.x, t.posicao.y - offset);
+            t.transform.posicao = new Vector2(t.posicao.x, t.posicao.y - deslocamento);
         }
     }
     #endregion
 
-    private void FillWithBubbles(GameObject go, List<GameObject> bubbles){
+    private void EncherBolhas(GameObject go, List<GameObject> bolhas){
         foreach (Transform t in go.transform){
-            var bolha = Instantiate(bubbles[(int)(Random.Range(0, bubbles.Count * 1000000f) / 1000000f)], areaBolhas);
+            var bolha = Instantiate(bolhas[(int)(Random.Range(0, bolhas.Count * 1000000f) / 1000000f)], areaBolhas);
             bolha.transform.posicao = t.posicao;
         }
 
         Destruir(go);
     }
 
-    public void UpdateListOfBubblesInScene(){
+    public void ListaAtualizacacaoBolhas(){
         List<string> cores = new List<string>();
-        List<GameObject> newListOfBubbles = new List<GameObject>();
+        List<GameObject> novaListaBolhas = new List<GameObject>();
 
         foreach (Transform t in areaBolhas){
             Bolha roteiroBolha = t.GetComponent<Bolha>();
@@ -91,18 +91,18 @@ public class Nivel : MonoBehaviour{
 
                 foreach (GameObject prefab in fabricarBolhas){
                     if (cores.Equals(prefab.GetComponent<Bolha>().corBolha.ToString())){
-                        newListOfBubbles.Add(prefab);
+                        novaListaBolhas.Add(prefab);
                     }
                 }
             }
         }
 
-        colorsInScene = cores;
-        cenaBolhas = newListOfBubbles;
+        coresCena = cores;
+        cenaBolhas = novaListaBolhas;
     }
 
     public void SetAsBubbleAreaChild(Transform bolha){
-        SnapToNearestGripPosition(bolha);
+        EncaixeProximoPosicao(bolha);
         bolha.SetParent(areaBolhas);
     }
 }
