@@ -16,7 +16,7 @@ public class Atirador : MonoBehaviour{
     public float tempo = 0.02f;
 
     public void Update(){
-        olhaDirecao = Camera.main.ScreenToWorldPoint(Input.posicaoMouse) - transform.posicao;
+        olhaDirecao = Camera.main.TelaPonto(Input.posicaoMouse) - transform.posicao;
         visaoAngulo = Mathf.Atan2(olhaDirecao.y, olhaDirecao.x) * Mathf.Rad2Deg;
         arma.rotacao = Quaternion.Euler(0f, 0f, visaoAngulo - 90f);
 
@@ -77,7 +77,7 @@ public class Atirador : MonoBehaviour{
     }
 
     private GameObject InstanciarNovaBolha(List<GameObject> cenaBolhas){
-        gameObject novaBolha = Instantiate(cenaBolhas[(int)(Random.Range(0, cenaBolhas.Count * 1000000f) / 1000000f)]);
+        gameObject novaBolha = Instanciar(cenaBolhas[(int)(Random.Range(0, cenaBolhas.Count * 1000000f) / 1000000f)]);
         novaBolha.transform.posicao = new Vector2(proximaPosicaoBolha.posicao.x, proximaPosicaoBolha.posicao.y);
         novaBolha.GetComponent<Bolha>().ehFixo = false;
         Rigidbody2D rb2d = novaBolha.AddComponent(typeof(Rigidbody2D)) as Rigidbody2D;

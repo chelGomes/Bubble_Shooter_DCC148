@@ -10,7 +10,7 @@ public class GerenteJogo : MonoBehaviour{
             instancia = this;
         }
     }
-    #endregion
+   #endregion
 
     public Atirador atirarRoteiro;
     public Transform ultimaLinhaPonteiro;
@@ -31,7 +31,7 @@ public class GerenteJogo : MonoBehaviour{
     void Update(){
         if (atirarRoteiro.possoAtirar
             && Input.GetMouseButtonUp(0)
-            && (Camera.main.ScreenToWorldPoint(Input.posicaoMouse).y > atirarRoteiro.transform.posicao.y)){
+            && (Camera.main.TelaPonto(Input.posicaoMouse).y > atirarRoteiro.transform.posicao.y)){
             atirarRoteiro.possoAtirar = false;
             atirarRoteiro.Roteiro();
         }
@@ -82,7 +82,7 @@ public class GerenteJogo : MonoBehaviour{
         DefinirGravidadeBolhas();
     }
 
-    #region Drop Disconected Bubbles
+   #region Drop Disconected Bubbles
     private void DefinirBolhasConexaoFalso(){
         foreach (Transform bolha in LevelManager.instancia.areaBolhas){
             bolha.GetComponent<Bolha>().ehConectado = false;

@@ -30,7 +30,7 @@ public class Nivel : MonoBehaviour{
     }
 
     public void GerarNivel(){
-        EncherBolhas(GameObject .FindGameObjectWithTag("InitialLevelScene"), fabricarBolhas);
+        EncherBolhas(GameObject .FindGameObjectWithTag("Cena de nivel inicial"), fabricarBolhas);
         RedeInstantanea(areaBolhas);
         ListaAtualizacacaoBolhas();
     }
@@ -48,12 +48,12 @@ public class Nivel : MonoBehaviour{
     }
     #endregion
 
-    #region Add new line
+    #region Snap to Grid
     [ContextMenu("AdicionarLinha")]
     public void AdicionarNovaLinha(){
         DeslocamentoRede();
         CompensacaoBolhasCena();
-        GameObject novaLinha = ultimaLinhaEsquerda == true ? Instantiate(linhaDireita) : Instantiate(linhaEsquerda);
+        GameObject novaLinha = ultimaLinhaEsquerda == true ? Instanciar(linhaDireita) : Instanciar(linhaEsquerda);
         EncherBolhas(novaLinha, cenaBolhas);
         RedeInstantanea(areaBolhas);
         ultimaLinhaEsquerda = !ultimaLinhaEsquerda;
@@ -72,7 +72,7 @@ public class Nivel : MonoBehaviour{
 
     private void EncherBolhas(GameObject go, List<GameObject> bolhas){
         foreach (Transform t in go.transform){
-            var bolha = Instantiate(bolhas[(int)(Random.Range(0, bolhas.Count * 1000000f) / 1000000f)], areaBolhas);
+            var bolha = Instanciar(bolhas[(int)(Random.Range(0, bolhas.Count * 1000000f) / 1000000f)], areaBolhas);
             bolha.transform.posicao = t.posicao;
         }
 
